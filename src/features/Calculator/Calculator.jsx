@@ -88,55 +88,62 @@ const Calculator = () => {
   }, [inputValue]);
 
   return (
-    <div className="calculator-main-container">
-      {history.length > 0 && (
-        <div className="calc-history">
-          <h4>History</h4>
-          <ul>
-            {history.map((item, index) => (
+    <div className="main-container">
+      <div className="calc-title">
+        <h2>
+          React
+          <br />
+          Calculator
+        </h2>
+        <h4>Don't divide by zero</h4>
+      </div>
+
+      <div className="calc-main-container">
+        <div className="calculator-container">
+          <input value={inputValue} readOnly />
+
+          <div className="calc-buttons">
+            {buttons.map((btn) => (
+              <button
+                key={btn}
+                className="calc-btn"
+                onClick={() => {
+                  if (btn === "CC") {
+                    handleDelete();
+                  } else if (btn === "=") {
+                    handleCalculate();
+                  } else if (btn === "C") {
+                    handleBackspace();
+                  } else if (btn === ".") {
+                    canAddDot();
+                  } else {
+                    if (
+                      operators.includes(btn) &&
+                      ((inputValue === "" && btn !== "-") ||
+                        operators.includes(lastChar) ||
+                        lastChar === ".")
+                    ) {
+                      return;
+                    }
+                    setInputValue((prev) => prev + btn);
+                  }
+                }}
+              >
+                {btn}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+      <div className="calc-history">
+        <ul>
+          {history
+            .slice(-12)
+            .reverse()
+            .map((item, index) => (
               <li key={index}>{item}</li>
             ))}
-          </ul>
-        </div>
-      )}
-
-      <h2>React Calculator</h2>
-      <h5>Don't divide by zero</h5>
-
-      <div className="calculator-container">
-        <input value={inputValue} readOnly />
-
-        <div className="calc-buttons">
-          {buttons.map((btn) => (
-            <button
-              key={btn}
-              className="calc-btn"
-              onClick={() => {
-                if (btn === "CC") {
-                  handleDelete();
-                } else if (btn === "=") {
-                  handleCalculate();
-                } else if (btn === "C") {
-                  handleBackspace();
-                } else if (btn === ".") {
-                  canAddDot();
-                } else {
-                  if (
-                    operators.includes(btn) &&
-                    ((inputValue === "" && btn !== "-") ||
-                      operators.includes(lastChar) ||
-                      lastChar === ".")
-                  ) {
-                    return;
-                  }
-                  setInputValue((prev) => prev + btn);
-                }
-              }}
-            >
-              {btn}
-            </button>
-          ))}
-        </div>
+        </ul>
       </div>
     </div>
   );
